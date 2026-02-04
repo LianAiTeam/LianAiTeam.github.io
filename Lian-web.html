@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیان | راهکارهای نرم‌افزاری هوشمند</title>
+
+    <!-- فونت‌ها -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            /* رنگ‌های مورد نظر کاربر */
+            --primary: #ebebeb;
+            --primary-dark: #508dd8;
+            --primary-darker: #272727;
+            --secondary: #96abe2;
+            --accent: #B48EAD;
+            --text: #2E3440;
+            --text-light: #ffffff;
+            --bg: #0f111a;
+            /* تغییر به حالت تاریک */
+            --card-bg: #1c1e2d;
+            --card-border: rgba(129, 161, 193, 0.15);
+            --white: #ECEFF4;
+            --glass: rgba(30, 33, 46, 0.6);
+            --success: #A3BE8C;
+            --warning: #EBCB8B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(135deg, var(--bg), #1a1d2b);
+            color: var(--white);
+            overflow-x: hidden;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        /* --- خطوط متحرک پس زمینه --- */
+        .grid-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(129, 161, 193, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(129, 161, 193, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            animation: moveLines 20s linear infinite;
+        }
+
+        @keyframes moveLines {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(40px, 40px);
+            }
+        }
+
+        /* --- ذرات متحرک --- */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: floatParticle linear infinite;
+        }
+
+        @keyframes floatParticle {
+            to {
+                transform: translate3d(0, 0, 0);
+                opacity: 0;
+            }
+        }
+
+        /* --- حالت تار نیمه شفاف --- */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.03;
+            /* background: url('https://grainy-gradients.vercel.app/noise.svg'); */
+            /* خط موقتاً متوقف شده */
+            background: repeating-linear-gradient(0deg,
+                    rgba(255, 255, 255, 0.2),
+                    rgba(255, 255, 255, 0.2) 1px,
+                    transparent 5px,
+                    transparent 5px);
+        }
+
+        /* --- حلقه و نقطه متحرک --- */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--primary);
+            transition: width 0.3s, height 0.3s, opacity 0.2s;
+        }
+
+        .cursor-outline.hovering {
+            width: 60px;
+            height: 60px;
+            opacity: 0.5;
+        }
+
+        /* --- عناصر طراحی --- */
+        .section-title {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-title h2 {
+            font-size: 2.8rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* --- حباب‌های متحرک --- */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.2;
+            z-index: 0;
+            animation: floatBlob 25s infinite alternate ease-in-out;
+        }
+
+        .b1 {
+            width: 600px;
+            height: 600px;
+            background: var(--primary);
+            top: -10%;
+            right: -10%;
+        }
+
+        .b2 {
+            width: 500px;
+            height: 500px;
+            background: var(--secondary);
+            bottom: -10%;
+            left: -10%;
+        }
+
+        .b3 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent);
+            top: 50%;
+            left: 20%;
+        }
+
+        @keyframes floatBlob {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(50px, -50px) scale(1.2);
+            }
+        }
+
+        /* --- نوار ناوبری --- */
+        nav {
+            padding: 25px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            background: rgba(15, 17, 26, 0.7);
+            border-bottom: 1px solid var(--card-border);
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(15, 17, 26, 0.95);
+            padding: 15px 5%;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a {
+            margin-right: 35px;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(129, 161, 193, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(129, 161, 193, 0.4);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* --- بخش اصلی --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        h1 {
+            font-size: 4.2rem;
+            line-height: 1.2;
+            margin-bottom: 25px;
+            background: linear-gradient(45deg, var(--white), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .glass-card {
+            width: 350px;
+            height: 450px;
+            background: var(--glass);
+            border: 1px solid var(--card-border);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(129, 161, 193, 0.1) 0%, transparent 70%);
+            transition: all 0.5s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .glass-card:hover::before {
+            transform: rotate(20deg);
+        }
+
+        /* --- بخش محصولات --- */
+        .products-section {
+            padding: 120px 10%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            border: 1px solid var(--card-border);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(129, 161, 193, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+        }
+
+        .product-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
+        }
+
+        .product-image {
+            height: 250px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: rotate(45deg) translateX(-100%);
+            }
+
+            100% {
+                transform: rotate(45deg) translateX(100%);
+            }
+        }
+
+        .product-content {
+            padding: 30px;
+        }
+
+        .product-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .product-content h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+            width: 50%;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .product-content p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .product-tag {
+            display: inline-block;
+            background: rgba(129, 161, 193, 0.1);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid var(--primary);
+        }
+
+        .product-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* --- بخش هویت --- */
+        .dna-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .dna-card {
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dna-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s ease;
+        }
+
+        .dna-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .dna-card:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .dna-card i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .dna-card:hover i {
+            transform: scale(1.2);
+        }
+
+        /* --- بخش تکنولوژی --- */
+        .tech-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .tech-box {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 18px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .tech-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+
+        .tech-box h4 {
+            margin-bottom: 20px;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .tech-box h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 50px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 1px;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .tag {
+            background: rgba(129, 161, 193, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--white);
+            transition: all 0.3s ease;
+            border: 1px solid var(--primary);
+        }
+
+        .tag:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(129, 161, 193, 0.3);
+        }
+
+        /* --- نوار اعداد --- */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(135deg, var(--primary-darker), var(--primary-dark));
+            color: white;
+            padding: 60px 5%;
+            border-radius: 30px;
+            margin: 70px 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+        }
+
+        .stat-item {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item h3 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--white), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- فوتر --- */
+        footer {
+            padding: 70px 5% 30px;
+            text-align: center;
+            border-top: 1px solid var(--card-border);
+            margin-top: 120px;
+            color: var(--text-light);
+        }
+
+        /* --- انیمیشن‌های AOS --- */
+        [data-aos] {
+            opacity: 0;
+            transition-property: opacity, transform;
+        }
+
+        .aos-animate {
+            opacity: 1;
+        }
+
+        @media (max-width: 992px) {
+
+            .dna-grid,
+            .contact-wrapper,
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 140px;
+            }
+
+            .hero-visual {
+                margin-top: 60px;
+            }
+
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .cursor-dot,
+            .cursor-outline {
+                display: none;
+            }
+
+            * {
+                cursor: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ذرات پس زمینه -->
+    <div class="particles" id="particles"></div>
+
+    <!-- خطوط متحرک -->
+    <div class="grid-lines"></div>
+
+    <!-- نویز -->
+    <div class="noise"></div>
+
+    <!-- حلقه و نقطه متحرک -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- حباب‌های متحرک -->
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+
+    <nav id="navbar">
+        <div class="logo">لیان | راهکارهای نرم‌افزاری هوشمند</div>
+        <div class="nav-links">
+            <a href="#products">محصولات</a>
+            <a href="#about">درباره</a>
+            <a href="#tech">تکنولوژی</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content" data-aos="fade-left" data-aos-duration="1000">
+            <h1>تحول دیجیتال<br>با هوش مصنوعی</h1>
+            <p style="font-size: 1.3rem; color: var(--text-light); margin-bottom: 40px; max-width: 600px;">ما در لیان،
+                ایده‌های پیچیده را به محصولات نرم‌افزاری هوشمند و زیبا تبدیل می‌کنیم.</p>
+        </div>
+        <div class="hero-visual" data-aos="zoom-in" data-aos-duration="1000" data-aos-delay="200">
+            <div class="glass-card" id="tilt-card">
+                <i class="fas fa-brain" style="font-size: 4.5rem; color: var(--primary);"></i>
+                <h3 style="margin-top: 25px; color: var(--white);">AI Software Architecture</h3>
+                <div style="margin-top: 25px; text-align: center; font-size: 1rem; color: var(--text-light);">
+                    هوش مصنوعی <br> عملکرد مناسب <br> کارایی بالا
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- بخش محصولات -->
+    <section class="products-section" id="products">
+        <div class="section-title" data-aos="fade-up">
+            <h2>محصولات ما</h2>
+            <br>
+            <p>راهکارهای نرم‌افزاری هوشمند برای کسب‌وکارهای مدرن</p>
+        </div>
+        <div class="products-grid">
+            <div class="product-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="product-image">
+                    <img src="static/images/ofoq.png" alt="افق: پرو مجازی عینک" width="400px">
+                </div>
+                <div class="product-content">
+                    <h3>افق: پرو مجازی عینک</h3>
+                    <p>پرو هوشمند و مجازی عینک های آفتابی </p>
+                    <span class="product-tag">Computer Vision & Deep Learning</span>
+
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">AI</div>
+                            <div class="stat-label">سیستم توصیه گر</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">180+</div>
+                            <div class="stat-label">عینک</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="product-image">
+                    <img src="static/images/noostad.png" alt="نواستاد: استادی جدید  " width="400px">
+
+                </div>
+                <div class="product-content">
+                    <h3> نو استاد: روشی نوین برای یادگیری</h3>
+                    <p>یادگیری همه موضوعات به صورت تعاملی</p>
+                    <span class="product-tag">LLM & NLP</span>
+
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">AI</div>
+                            <div class="stat-label">سیستم چند عامله پویا</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">3+</div>
+                            <div class="stat-label">مود پژوهشی</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="product-image">
+                    <img src="static/images/self-driving.png" alt="ربات خودران لیان" width="400px">
+                </div>
+                <div class="product-content">
+                    <h3>ربات خودران لیان</h3>
+                    <p>سومین مقام مسابقات پژوهش‌سرا</p>
+                    <span class="product-tag">hardware</span>
+                    <span class="product-tag">CV</span>
+
+
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">رتبه</div>
+                            <div class="stat-label">3 کشور</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">AI</div>
+                            <div class="stat-label">پردازش تصویر</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="about" style="padding: 120px 10%; position: relative; z-index: 10;">
+        <div class="section-title" data-aos="fade-up">
+            <h2>چرا لیان؟</h2>
+            <br>
+            <p>فراتر از یک پیمانکار، ما شریک تکنولوژی شما هستیم.</p>
+        </div>
+        <div class="dna-grid">
+            <div class="dna-card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-eye"></i>
+                <h3>چشم‌انداز</h3>
+                <p>ساخت اکوسیستمی که در آن هر کسب‌وکار، ابزار دیجیتال اختصاصی و هوشمند خود را دارد.</p>
+            </div>
+            <div class="dna-card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-robot"></i>
+                <h3>مأموریت</h3>
+                <p>ارائه راهکارهای نرم‌افزاری مبتنی بر هوش مصنوعی که تجربه کاربری بی‌نظیر ارائه می‌دهد.</p>
+            </div>
+            <div class="dna-card" data-aos="fade-up" data-aos-delay="300">
+                <i class="fas fa-shield-alt"></i>
+                <h3>ارزش‌ها</h3>
+                <p>شفافیت کامل، تعهد به کیفیت کد و تحویل دقیق در زمانبندی.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="tech" style="padding: 100px 10%; position: relative; z-index: 10;">
+        <div class="section-title" data-aos="fade-up">
+            <h2>تخصص فنی ما</h2>
+            <br>
+            <p>ما از مدرن‌ترین ابزارها و هوش مصنوعی برای ساخت رویاهای شما استفاده می‌کنیم.</p>
+        </div>
+        <div class="tech-container">
+            <div class="tech-box" data-aos="flip-left" data-aos-delay="100">
+                <h4>Web Development</h4>
+                <div class="tech-tags">
+                    <span class="tag">Flask</span>
+                    <span class="tag">Django</span>
+                    <span class="tag">React.js</span>
+                    <span class="tag">Front-End</span>
+                </div>
+            </div>
+            <div class="tech-box" data-aos="flip-left" data-aos-delay="200">
+                <h4>Artificial Intelligence</h4>
+                <div class="tech-tags">
+                    <span class="tag">Natural Language Processing</span>
+                    <span class="tag">Computer Vision</span>
+                    <span class="tag">Machine Learning</span>
+                    <span class="tag">Deep Learning</span>
+                </div>
+            </div>
+            <div class="tech-box" data-aos="flip-left" data-aos-delay="300">
+                <h4>Mobile & DevOps</h4>
+                <div class="tech-tags">
+                    <span class="tag">Docker</span>
+                    <span class="tag">CI/CD</span>
+                    <span class="tag">Ktor</span>
+                    <span class="tag">Kotlin</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="about-team" style="padding: 120px 10%; position: relative; z-index: 10;">
+        <div class="section-title" data-aos="fade-up">
+            <h2>درباره تیم ما</h2>
+
+        </div>
+        <div style="background: var(--card-bg); border-radius: 25px; padding: 40px; text-align: center; border: 1px solid var(--card-border); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);">
+            <h3 style="color: var(--primary); margin-bottom: 20px; font-size: 1.8rem;">گروه لیان</h3>
+            <p style="font-size: 1.2rem; line-height: 1.8; max-width: 800px; margin: 0 auto 30px; color: var(--text-light);">
+                ما یک تیم سه‌نفره مشهد هستیم که با علاقه و انگیزه‌ی بالا در حوزه‌ی هوش مصنوعی فعالیت می‌کنیم. تمرکز ما بر یادگیری عمیق، بینایی ماشین، پردازش زبان طبیعی و طراحی سیستم‌های توصیه‌گر است و در کنار آن در زمینه‌ی توسعه‌ی وب‌سایت‌ها و اپلیکیشن‌های ویندوزی و اندرویدی نیز فعالیت داریم. تلاش می‌کنیم با تلفیق خلاقیت، دانش فنی و کار تیمی، ایده‌ها را به پروژه‌ها و محصولات هوشمند و کاربردی تبدیل کنیم و سهمی در ساخت آینده‌ی فناوری داشته باشیم.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 30px;">
+
+                <div style="background: var(--glass); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border);">
+                    <i class="fas fa-envelope" style="font-size: 2rem; color: var(--primary); margin-bottom: 10px;"></i>
+                    <h4 style="color: var(--primary); margin: 10px 0;">راه‌های ارتباطی</h4>
+                    <p style="color: var(--text-light);">شماره تماس:09153709661</p>
+                    <p style="color: var(--text-light);">آیدی تلگرام : LianTeam@</p>
+                    <p style="color: var(--text-light);">آیدی ایتا : LianTeam@</p>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© ۱۴۰۴ گروه نرم‌افزاری لیان | Lian Edge Group</p>
+
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <script>
+        // ایجاد ذرات پس زمینه
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+
+                // موقعیت تصادفی
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+
+                // اندازه تصادفی
+                const size = Math.random() * 3 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                // تاخیر و مدت زمان حرکت تصادفی
+                const duration = Math.random() * 10 + 5;
+                const delay = Math.random() * 5;
+
+                particle.style.animation = `floatParticle ${duration}s linear ${delay}s infinite`;
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // AOS Initialize
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Custom Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+            gsap.to(cursorOutline, { x: e.clientX, y: e.clientY, duration: 0.3 });
+        });
+
+        // Hover effect for cursor
+        const buttons = document.querySelectorAll('a, button, .dna-card, .tech-box, .tag, .product-card');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                cursorOutline.classList.add('hovering');
+            });
+
+            button.addEventListener('mouseleave', () => {
+                cursorOutline.classList.remove('hovering');
+            });
+        });
+
+        // 3D Tilt Effect
+        const card = document.getElementById('tilt-card');
+        if (card) {
+            document.querySelector('.hero').addEventListener('mousemove', (e) => {
+                const x = (window.innerWidth / 2 - e.pageX) / 30;
+                const y = (window.innerHeight / 2 - e.pageY) / 30;
+                card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+            });
+
+            document.querySelector('.hero').addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateY(0) rotateX(0)';
+            });
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Initialize particles
+        createParticles();
+    </script>
+</body>
+
+</html>
